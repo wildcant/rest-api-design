@@ -1,8 +1,14 @@
-const { getCustomers } = require('../models/customers.model');
+const {
+  getCustomers
+} = require('../models/customers.model');
 
-exports.getAllCustomers = (req, res, next) => {
-  getCustomers((err, response) => {
-    if (err) res.status(404).send(err);
-    res.status(201).send(response);
-  });
+exports.getAllCustomers = async (req, res, next) => {
+  try {
+    let data = await getCustomers();
+    // console.log(data);
+    res.status(201).send(data)
+  } catch (error) {
+    console.log(error)
+    res.status(404).send(error)
+  }
 }

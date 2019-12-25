@@ -22,6 +22,7 @@ module.exports = {
 };
 
 // Testing pool events
+/*
 pool.on('acquire', function (connection) {
   console.log('acquire');
 });
@@ -34,3 +35,4 @@ pool.on('enqueue', function () {
 pool.on('release', function (connection) {
   console.log('Connection %d released', connection.threadId);
 });
+*/
