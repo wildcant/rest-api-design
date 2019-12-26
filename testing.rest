@@ -1,1 +1,23 @@
-GET http://localhost:3000/customers/login
+GET http://localhost:3000/customers
+###
+
+POST http://localhost:3000/customers/register
+Content-Type: application/json
+
+{
+  "name": "wilMer",
+  "email": "test2@gmail.com",
+  "password": "password"
+}
+###
+
+POST http://localhost:3000/customers/login
+Content-Type: application/json
+
+{
+  "email": "test2@gmail.com",
+  "password": "password"
+}
+###
+
+GET http://localhost:3000/logintest
