@@ -1,12 +1,11 @@
 const {
-  customer_list,
-  customer_create,
-  customer_get
+  get_all_customers,
+  create_customer
 } = require('../models/customers.model');
 
-exports.get_all_customers = async (req, res) => {
+exports.customer_list = async (req, res) => {
   try {
-    let data = await customer_list();
+    let data = await get_all_customers();
     // console.log(data);
     res.status(201).send(data)
   } catch (error) {
@@ -14,23 +13,16 @@ exports.get_all_customers = async (req, res) => {
     res.status(400).send(error)
   }
 }
-exports.create_customer = async (req, res) => {
+exports.customer_create = async (req, res) => {
+  const { name, email, password } = req.body
   try {
-    let success = await customer_create(req.body);
-    res.status(201).send('success');
+    await create_customer( name.toLowerCase(), email.toLowerCase(), password );
+    res.status(201).send('Customer created successfully');
   } catch (error) {
     if (error.code == 'ER_DUP_ENTRY') {
       res.status(400).send('Este correo ya se encuentra registrado')
     } else {
       res.status(400).send(error)
     }
-  }
-}
-exports.get_customer = async (req, res) => {
-  try {
-    let response = await customer_get(req.body);
-    res.status(201).send(response);
-  } catch (error) {
-    res.status(400).send(error)
   }
 }

@@ -4,24 +4,30 @@ const router = express.Router();
 const validate = require('../validations/validate').validate;
 const schemas = require('../validations/auth.validation');
 //Controller
-const authorize = require('../controllers/authentication.controller').authorize;
 const {
-  get_all_customers,
-  create_customer,
-  get_customer,
+  customer_list,
+  customer_create
 } = require('../controllers/customers.controller');
+const { 
+  authenticate_customer,
+  authorize
+} = require('../middlewares/auth');
 
 router
   .route('/')
-  .get(authorize, get_all_customers);
+  .get( customer_list);
 
-  
 router
   .route('/register')
-  .post(validate(schemas.register_schema), create_customer);
-  
+  .post(validate(schemas.register_schema), customer_create);
+    
 router
   .route('/login')
-  .post(validate(schemas.login_schema), get_customer);
-
+  .post(validate(schemas.login_schema), authenticate_customer);
+  
+router
+  .route('/protected')
+  .get(authorize, (req, res)=> {
+    res.status(200).send('Access granted');
+  });
 module.exports = router;

@@ -14,10 +14,12 @@ Content-Type: application/json
 POST http://localhost:3000/customers/login
 Content-Type: application/json
 
-{
+{ 
   "email": "test2@gmail.com",
   "password": "password"
 }
 ###
 
-GET http://localhost:3000/logintest
+GET http://localhost:3000/customers/protected
+Authorization: Bearer
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGN1c3RvbWVyIjo1MiwibmFtZSI6IndpbG1lciIsImVtYWlsIjoidGVzdDJAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkMlZuT0ExeFdlUjJQZWdXNDI0dno4Lm9mc2xZYVdqZlF1UnNFR09aQldaOWRtR2JqdzVrUUsiLCJkYXRlIjoiMjAxOS0xMi0yNlQwNjoyNDoxOS4wMDBaIiwiaWF0IjoxNTc3MzQ4NDk3LCJleHAiOjE1NzczNTIwOTd9.tMP_WXygetyjbjG0IWxWlhUX4dQNc0lVQG4_A_ny8NU
