@@ -15,22 +15,31 @@ const {
 
 exports.authenticate_customer = (req, res, next) => {
   passport.authenticate('local', { session: false }, (error, user, message) => {
-    if (error || !user) {
-      res.status(400).json({ error, message });
+    console.log(error);
+    if (error) {
+      res.status(404).json({ error });
+    } else if (!user) {
+      res.status(200).json({ message });
     } else {
-      const payload = Object.assign({}, user)
+      const payload = {user: user.name};
       req.login(payload, { session: false }, (err) => {
         if (err) res.status(400).send(err);
         const token = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
           expiresIn: JWT_EXPIRATION
         });
-        res.status(200).send({ user, token });
+        res
+          .status(201)
+          .cookie('jwtToken', token)
+          .json(payload);
       });
     }
   })(req, res, next);
 };
 
 const handleJWT = (req, res, next) => (err, user, info) => {
+  console.log(req);
+  console.log("req.cookies");
+  console.log(req.cookies)
   if (err){
     res.status(400).send(err);
   } else if (info){

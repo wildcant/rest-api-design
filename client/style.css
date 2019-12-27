@@ -1,0 +1,15 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+form {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
