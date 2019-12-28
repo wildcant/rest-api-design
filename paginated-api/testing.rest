@@ -1,0 +1,1 @@
+GET http://localhost:3001/posts?page=1&sortBy=id&dir=desc
