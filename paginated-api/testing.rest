@@ -1,1 +1,1 @@
-GET http://localhost:3001/posts?page=1&sortBy=id&dir=desc
+GET http://localhost:8001/posts?page=10&sortBy=id&dir=desc

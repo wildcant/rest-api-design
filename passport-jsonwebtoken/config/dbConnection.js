@@ -16,7 +16,7 @@ const pool = mysql.createPool({
 });
 
 module.exports = {
-  getConnetion: (callback) => {
+  getConnection: (callback) => {
     return pool.getConnection(callback);
   }
 };

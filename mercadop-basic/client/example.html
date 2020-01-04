@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>mercado-pago-basic-checkout</title>
+  <script src="checkout-render.js"></script>
+</head>
+<body>
+  <h2 class="title">Incorporacion a mercado pago</h2>
+  <h4>Listado de productos</h4>
+  <table class="tb">
+    <tr class="tb-header">
+      <th class="tbhead-item">ID</th>
+      <th class="tbhead-item">Nombre</th>
+      <th class="tbhead-item">Categoria</th>
+      <th class="tbhead-item">Precio</th>
+      <th class="tbhead-item">Stock</th>
+      <th class="tbhead-item">Acciones</th>
+    </tr>
+    <tr class="tb-body">
+      <td class="tb-item">1</td>
+      <td class="tb-item">Anillo de diamantes</t>
+      <td class="tb-item">Anillos</t>
+      <td class="tb-item">$ 580</t>
+      <td class="tb-item">50</dt>
+      <td class="tb-item"><button onclick="getPreference()">Pagar</button></t>
+    </tr>
+  </table>
+  <a href="#" id="pay" name="MP-Checkout"  class="red-s-ar-sq-arall" mp-mode="modal">pay</a>
+  <script src="payment.js"></script>
+</body>
+</html>

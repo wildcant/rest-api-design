@@ -15,7 +15,7 @@ const {
 
 router
   .route('/')
-  .get(authorize, customer_list);
+  .get(customer_list);
 
 router
   .route('/register')

@@ -1,0 +1,9 @@
+FROM node:12.11.1
+
+WORKDIR /srv
+
+ADD . .
+RUN npm install
+
+EXPOSE 8001
+CMD ["node", "app.js"]

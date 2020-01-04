@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const getConnection = require('../config/dbConnection').getConnetion;
+const { getConnection  } = require('../config/dbConnection');
 
 
 /** Get customers list

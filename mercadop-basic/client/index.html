@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>mercado-pago-basic-checkout</title>
+  </head>
+
+  <body>
+    <form action="/procesar-pago" method="POST">
+    </form>
+    <script>
+      window.onload = async function () {
+        const response = await fetch('http://localhost:3000/preference');
+        const preference = await response.json();
+        console.log(preference);
+
+        var script = document.createElement('script');
+        script.src = "https://sandbox.mercadopago.com.ar/integrations/v1/web-payment-checkout.js";
+        script.setAttribute("data-preference-id", preference);
+        document.getElementsByTagName('form')[0].appendChild(script);
+        console.log(document.getElementsByTagName('form'));
+      }
+    </script>
+  </body>
+
+</html>
