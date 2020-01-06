@@ -1,0 +1,22 @@
+POST http://localhost:8082/send
+Content-Type: application/json
+
+{
+  "notiType": 1,
+  "name": "Wilmer",
+  "company": "Tecnology",
+  "email": "will.canti2697@gmail.com",
+  "phone": "here it is"
+}
+
+###
+POST http://localhost:3001/send
+Content-Type: application/json
+
+{
+  "notiType": 1,
+  "name": "Wilmer",
+  "company": "Tecnology",
+  "email": "will.canti2697@gmail.com",
+  "phone": "here it is"
+}
