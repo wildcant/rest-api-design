@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     Int       @id @default(autoincrement())
+  isDeleted              Boolean
+  createdAt              DateTime  @default(now()) @db.DateTime(0)
+  firstName              String    @db.VarChar(512)
+  lastName               String    @db.VarChar(512)
+  username               String    @unique @db.VarChar(255)
+  password               String    @db.VarChar(1024)
+  passwordToken          String?   @db.VarChar(512)
+  email                  String    @unique @db.VarChar(512)
+  phone                  String    @db.VarChar(512)
+  isEmailVerified        Boolean   @default(false)
+  isPhoneVerified        Boolean   @default(false)
+  is2FAEnabled           Boolean   @default(false)
+  failedLoginAttempts    Int       @default(0)
+  lastFailedLoginAttempt DateTime? @db.DateTime(0)
+  passwordValidUntil     DateTime? @db.DateTime(0)
+}

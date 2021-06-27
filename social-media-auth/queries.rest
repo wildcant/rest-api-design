@@ -1,0 +1,28 @@
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+  "username": "jdoe",
+  "password": "123"
+}
+
+###
+GET http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJKaG9uIiwibGFzdE5hbWUiOiJEb2UiLCJ1c2VybmFtZSI6Impkb2UiLCJlbWFpbCI6ImpvZUBhY21lLmNvbSIsInBob25lIjoiNTczMDI5NDg5MzgyIiwiaWF0IjoxNjI0NzY0ODgwLCJleHAiOjE2MjQ3Njg0ODB9.lFNuZ3DNbL2aszmNx2G3woshPe8rxsy--Uy3WcdGQdc
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane@acme.com",
+  "username": "janedoe",
+  "password": "123",
+  "phone": "573029489382",
+  "provider": "facebook",
+  "idpToken": "EAAJXqugFMK4BABEgMUPQn4VIZAvJHYdp2ZCR0PbojlUY7FlnfYwYDMr0veP7m3uMcRgk19Go1Hui7ZCox4QKZB6WjXrZAHpgLBSyomoBdRT6zA6ABwZBgLH01ZAFw1cCZCfi3LrFsA4oZCiRQMWVv9cS8hlNpFD7acrAt2ZCYwqsWO5zwtlWAhsuGBfLWlujFmDzgZCpADMhrJnfe2xKAaA6lZB6"
+}
+
+###
