@@ -13,9 +13,9 @@ import { User } from '@prisma/client'
 
 export function localStrategy(): void {
   passport.use(
-    new LocalStrategy(async function (username, password, cb) {
+    new LocalStrategy(async function (email, password, cb) {
       try {
-        const user = await userRepository.findUnique({ where: { username } })
+        const user = await userRepository.findUnique({ where: { email } })
         if (!user) return cb(null, false)
         if (user.password !== password) return cb(null, false)
         return cb(null, sanitizeUser(user))
@@ -36,7 +36,7 @@ export function jwtStrategy(): void {
       const userData = payload as User
       try {
         const user = await userRepository.findUnique({
-          where: { username: userData.username },
+          where: { email: userData.email },
         })
         if (!user) return done(null, false)
         return done(null, user)

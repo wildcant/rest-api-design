@@ -1,36 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
-import { AUTH_PROVIDERS } from '../enums'
+import { generateToken } from '../auth'
+import { ResponseMessages, AuthProviders } from '../enums'
 import { sanitizeUser } from '../helpers'
-import { UserCreate, userRepository } from '../repositories'
-import axios from 'axios'
-import { User } from '@prisma/client'
-
-async function facebookAuth(accessToken: string): Promise<User> {
-  try {
-    const { data } = await axios({
-      url: 'https://graph.facebook.com/me',
-      method: 'get',
-      params: {
-        fields: ['id', 'email', 'first_name', 'last_name'].join(','),
-        access_token: accessToken,
-      },
-    })
-    // TODO - Review fields
-    const user = {
-      firstName: data.first_name,
-      lastName: data.last_name,
-      email: data.email,
-    } as User
-    const federetedUser = {
-      externalId: data.id,
-      provider: AUTH_PROVIDERS.FACEBOOK,
-    }
-    return user
-  } catch (error) {
-    console.log({ error })
-    throw new Error(error.message)
-  }
-}
+import {
+  authProviderRepository,
+  UserCreate,
+  userRepository,
+} from '../repositories'
 
 export async function createUser(
   req: Request,
@@ -39,36 +15,76 @@ export async function createUser(
 ): Promise<void> {
   try {
     const createUserBody = req.body as UserCreate
-    const existingUser = await userRepository.findFirst({
-      where: {
-        OR: [
-          { username: createUserBody.username },
-          { email: createUserBody.email },
-        ],
-      },
+    const existingUser = await userRepository.findUnique({
+      where: { email: createUserBody.email },
     })
 
     if (existingUser) {
-      res.status(200).json({ statusCode: 400, message: 'User already exist.' })
+      const userProviders = await authProviderRepository.findMany({
+        where: { userId: existingUser.id },
+      })
+      // Any existing user should have at least one auth provider
+      if (!userProviders?.length) {
+        throw new Error()
+      }
+
+      const currentUser = userProviders.find(
+        ({ provider }) => provider === createUserBody.provider
+      )
+      // Trying to register existing user
+      if (currentUser.provider === AuthProviders.LOCAL) {
+        res.status(400).json({
+          statusCode: 400,
+          message: ResponseMessages.USER_ALREADY_EXIST,
+        })
+        return
+      }
+
+      if (currentUser.externalId !== createUserBody.externalId) {
+        throw new Error(ResponseMessages.UNAUTHORIZED)
+      }
+
+      const token = await generateToken(sanitizeUser(existingUser))
+      res.status(200).json({ statusCode: 200, response: { token } })
       return
     }
 
     switch (createUserBody.provider) {
-      case AUTH_PROVIDERS.FACEBOOK:
-        const newUser = await facebookAuth(createUserBody.idpToken)
-        console.log({ newUser })
-        // await userRepository.create({
-        //   data: { ...newUser, isDeleted: false },
-        // })
+      case AuthProviders.FACEBOOK:
+      case AuthProviders.GOOGLE:
+        const { externalId, provider, ...userBody } = createUserBody
+        const newUser = await userRepository.create({
+          data: {
+            ...userBody,
+            isDeleted: false,
+            isEmailVerified: true,
+            authProvider: {
+              create: { externalId, provider },
+            },
+          },
+        })
+        const token = await generateToken(sanitizeUser(newUser))
+        res.status(201).json({ statusCode: 200, response: { token } })
         break
-      case AUTH_PROVIDERS.LOCAL:
+      case AuthProviders.LOCAL:
       default:
+        delete createUserBody.provider
         await userRepository.create({
-          data: { ...createUserBody, isDeleted: false },
+          data: {
+            ...createUserBody,
+            isDeleted: false,
+            authProvider: {
+              create: { provider: AuthProviders.LOCAL },
+            },
+          },
+        })
+        // TODO - Send verification email
+        res.status(200).json({
+          statusCode: 200,
+          message: ResponseMessages.VERIFICATION_EMAIL_SENT,
         })
         break
     }
-    res.status(200).json({ statusCode: 200, message: 'User created.' })
   } catch (error) {
     next(error)
   }

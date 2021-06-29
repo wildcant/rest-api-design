@@ -23,10 +23,6 @@ const verifyAsync: (
 
 export async function generateToken(user: PartialUser): Promise<string> {
   try {
-    console.log(
-      'TokenConstants.JWT_EXPIRATION: ',
-      TokenConstants.JWT_EXPIRATION
-    )
     const token = await singAsync(user, TokenConstants.ACCESS_TOKEN_SECRET, {
       expiresIn: TokenConstants.JWT_EXPIRATION,
     })

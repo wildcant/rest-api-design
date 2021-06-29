@@ -8,20 +8,32 @@ datasource db {
 }
 
 model User {
-  id                     Int       @id @default(autoincrement())
+  id                     Int            @id @default(autoincrement())
   isDeleted              Boolean
-  createdAt              DateTime  @default(now()) @db.DateTime(0)
-  firstName              String    @db.VarChar(512)
-  lastName               String    @db.VarChar(512)
-  username               String    @unique @db.VarChar(255)
-  password               String    @db.VarChar(1024)
-  passwordToken          String?   @db.VarChar(512)
-  email                  String    @unique @db.VarChar(512)
-  phone                  String    @db.VarChar(512)
-  isEmailVerified        Boolean   @default(false)
-  isPhoneVerified        Boolean   @default(false)
-  is2FAEnabled           Boolean   @default(false)
-  failedLoginAttempts    Int       @default(0)
-  lastFailedLoginAttempt DateTime? @db.DateTime(0)
-  passwordValidUntil     DateTime? @db.DateTime(0)
+  createdAt              DateTime       @default(now()) @db.DateTime(0)
+  firstName              String         @db.VarChar(512)
+  lastName               String         @db.VarChar(512)
+  password               String?        @db.VarChar(1024)
+  passwordToken          String?        @db.VarChar(512)
+  email                  String         @unique @db.VarChar(512)
+  phone                  String?        @unique @db.VarChar(512)
+  photo                  String?        @db.VarChar(1024)
+  isEmailVerified        Boolean        @default(false)
+  isPhoneVerified        Boolean        @default(false)
+  is2FAEnabled           Boolean        @default(false)
+  failedLoginAttempts    Int            @default(0)
+  lastFailedLoginAttempt DateTime?      @db.DateTime(0)
+  passwordValidUntil     DateTime?      @db.DateTime(0)
+  authProvider           AuthProvider[]
+}
+
+model AuthProvider {
+  id         Int     @default(autoincrement())
+  userId     Int
+  externalId String? @unique @db.VarChar(512)
+  provider   String  @db.VarChar(255)
+  user       User    @relation(fields: [userId], references: [id])
+
+  @@id([id, userId])
+  @@index([userId], name: "fk_FederatedIdentity_User_idx")
 }

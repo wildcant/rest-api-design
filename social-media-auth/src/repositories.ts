@@ -1,12 +1,13 @@
 import { PrismaClient, User } from '@prisma/client'
-import { AUTH_PROVIDERS } from './enums'
+import { AuthProviders } from './enums'
 
 const prisma = new PrismaClient()
 
 export interface UserCreate extends User {
-  provider: AUTH_PROVIDERS
-  idpToken?: string
+  provider: AuthProviders
+  externalId?: string
 }
 export const userRepository = prisma.user
+export const authProviderRepository = prisma.authProvider
 
 export default prisma
