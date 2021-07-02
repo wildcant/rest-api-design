@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id          Int         @id @default(autoincrement())
+  isDeleted   Boolean
+  createdAt   DateTime    @default(now()) @db.DateTime(0)
+  updatedAt   DateTime?   @db.DateTime(0)
+  name        String      @db.VarChar(512)
+  description String      @db.VarChar(1024)
+  itemImage   ItemImage[]
+  tagging     Tagging[]
+}
+
+model ItemImage {
+  id       Int     @unique @default(autoincrement())
+  itemId   Int
+  imageUrl String? @db.VarChar(45)
+  item     Item    @relation(fields: [itemId], references: [id])
+
+  @@id([id, itemId])
+  @@index([itemId], name: "fk_ItemImage_Item1_idx")
+}
+
+model Tag {
+  id           Int       @id @default(autoincrement())
+  isDeleted    Boolean
+  createdAt    DateTime  @default(now()) @db.DateTime(0)
+  updatedAt    DateTime? @db.DateTime(0)
+  name         String    @unique @db.VarChar(512)
+  iconUrl      String?   @db.VarChar(512)
+  taggingCount Int
+  tagging      Tagging[]
+}
+
+model Tagging {
+  id        Int       @unique @default(autoincrement())
+  tagId     Int
+  itemId    Int
+  isDeleted Boolean
+  createdAt DateTime? @default(now()) @db.DateTime(0)
+  updatedAt String?   @db.VarChar(45)
+  item      Item      @relation(fields: [itemId], references: [id])
+  tag       Tag       @relation(fields: [tagId], references: [id])
+
+  @@id([id, tagId, itemId])
+  @@index([itemId], name: "fk_Tagging_Item_idx")
+  @@index([tagId], name: "fk_Tagging_Tag1_idx")
+}
