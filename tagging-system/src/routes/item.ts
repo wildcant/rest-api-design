@@ -25,6 +25,7 @@ itemRouter
   .get(catcher(getItem))
   .put(uploadImages, validate(ItemUpdateSchema), catcher(updateItem))
   .delete(catcher(deleteItem))
+itemRouter.get('/tag/:tagId', catcher(byTag))
 
 async function getItems(req: Request, res: Response): Promise<void> {
   const items = await itemRepository.findMany({
@@ -86,7 +87,6 @@ async function createItem(req: Request, res: Response): Promise<void> {
   const { name, description, tags } = req.body as ItemBody
   const images = req.files as MulterFile[]
   const tagsIds = tags.map((id) => Number(id))
-  console.log({ tagsIds })
   const existingTags = await tagRepository.findMany({
     where: {
       AND: [{ id: { in: tagsIds } }, { isDeleted: false }],
@@ -197,5 +197,42 @@ async function deleteItem(req: Request, res: Response): Promise<void> {
       },
       updatedAt: new Date().toISOString(),
     },
+  })
+}
+
+async function byTag(req: Request, res: Response): Promise<void> {
+  const tagId = +req.params.tagId
+  const tag = await tagRepository.findFirst({
+    where: { AND: [{ id: tagId }, { isDeleted: false }] },
+  })
+  if (!tag) {
+    res.status(400).json({
+      statusCode: 400,
+      message: ResponseMessages.TAG_NOT_FOUND,
+    })
+    return
+  }
+
+  const items = await itemRepository.findMany({
+    where: { AND: [{ tagging: { some: { tagId } } }, { isDeleted: false }] },
+    select: {
+      id: true,
+      createdAt: true,
+      name: true,
+      description: true,
+      itemImage: { select: { id: true, imageUrl: true } },
+      tagging: {
+        select: {
+          id: true,
+          tag: { select: { name: true, iconUrl: true, taggingCount: true } },
+        },
+        where: { AND: [{ tagId }, { isDeleted: false }] },
+      },
+    },
+  })
+
+  res.status(200).json({
+    statusCode: 200,
+    response: { tag, items },
   })
 }
