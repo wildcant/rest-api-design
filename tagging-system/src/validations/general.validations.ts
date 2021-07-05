@@ -10,3 +10,5 @@ export const FileSchema = Joi.object({
   path: Joi.string(),
   size: Joi.number().required(),
 })
+
+export const FilesSchema = Joi.array().items(FileSchema)

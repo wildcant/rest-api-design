@@ -1,10 +1,11 @@
 import Joi, { Schema } from '@hapi/joi'
 import { NextFunction, Request, Response } from 'express'
 import { ReasonPhrases, StatusCodes } from 'http-status-codes'
-import { FileSchema } from './validations'
+import { FileSchema, FilesSchema } from './validations'
 
 type ValidateOptions = {
   image?: string
+  images?: string
 }
 export const validate =
   (schema: Schema, options?: ValidateOptions) =>
@@ -21,6 +22,17 @@ export const validate =
         : FileSchema.validate(req.file).error
       if (error) return next(error)
     }
+
+    if (options?.images) {
+      const error = !req.files?.length
+        ? ({
+            name: 'ValidationError',
+            message: `"${options.images}" files are required`,
+          } as Joi.ValidationError)
+        : FilesSchema.validate(req.files).error
+      if (error) return next(error)
+    }
+
     next()
   }
 

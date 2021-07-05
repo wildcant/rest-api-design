@@ -2,9 +2,14 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export type CreateTagBody = {
+export type TagBody = {
   name: string
-  icon: string
+}
+
+export type ItemBody = {
+  name: string
+  description: string
+  tags: string[]
 }
 
 export const itemRepository = prisma.item

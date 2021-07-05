@@ -5,6 +5,11 @@ export enum ResponseMessages {
   TAG_NOT_FOUND = 'Tag not found.',
   TAG_ALREADY_EXIST = 'Tag with this name already exist.',
 
+  ITEM_CREATED = 'Item created',
+  ITEM_UPDATED = 'Item updated',
+  ITEM_DELETED = 'Item deleted',
+  ITEM_NOT_FOUND = 'Item not found.',
+
   ACCEPTED = 'Accepted',
   BAD_GATEWAY = 'Bad Gateway',
   BAD_REQUEST = 'Bad Request',
